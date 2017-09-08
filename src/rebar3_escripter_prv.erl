@@ -38,7 +38,7 @@ do(State) ->
 
 escriptize(State0, App) ->
     AppName = rebar_app_info:name(App),
-    AppNameStr = rebar_utils:to_list(AppName),
+    AppNameStr = binary_to_list(AppName),
 
     %% Get the output filename for the escript -- this may include dirs
     Filename = filename:join([rebar_dir:base_dir(State0), "bin",
