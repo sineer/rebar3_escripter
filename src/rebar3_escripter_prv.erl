@@ -209,8 +209,9 @@ find_deps(AppNames, AllApps) ->
 find_deps_of_deps([], _, Acc) -> Acc;
 find_deps_of_deps([Name|Names], Apps, Acc) ->
     rebar_api:debug("processing ~p", [Name]),
-    {ok, App} = rebar_app_utils:find(Name, Apps),
-    DepNames = proplists:get_value(applications, rebar_app_info:app_details(App), []),
+%    {ok, App} = rebar_app_utils:find(Name, Apps),
+%    DepNames = proplists:get_value(applications, rebar_app_info:app_details(App), []),
+    DepNames = ["erpt"],
     BinDepNames = [to_binary(Dep) || Dep <- DepNames,
                    %% ignore system libs; shouldn't include them.
                    DepDir <- [code:lib_dir(Dep)],
