@@ -33,7 +33,7 @@ do(State) ->
     rebar_hooks:run_project_and_app_hooks(Cwd, pre, ?PROVIDER, Providers, State),
     rebar_api:info("PATH: ~p", [Path]),
     rebar_api:info("Building escript...", []),
-    Apps = rebar_app_discover:find_apps([Path]),
+    Apps = rebar_app_discover:find_unbuilt_apps([Path]),
     rebar_api:info("APPS: ~p", [Apps]),
     lists:foreach(fun(App) -> escriptize(State, App) end, Apps),
     {ok, State}.
