@@ -1,6 +1,6 @@
 -module(rebar3_escripter_prv).
 
--include("rebar.hrl").
+-include_lib("rebar3/rebar.hrl").
 
 -include_lib("providers/include/providers.hrl").
 -include_lib("kernel/include/file.hrl").
