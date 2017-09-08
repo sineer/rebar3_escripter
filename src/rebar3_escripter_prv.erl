@@ -28,13 +28,24 @@ init(State) ->
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
     Providers = rebar_state:providers(State),
-    Cwd = rebar_state:dir(State),
-    Path = filename:join([rebar_dir:root_dir(State), "scripts"]),
     rebar_hooks:run_project_and_app_hooks(Cwd, pre, ?PROVIDER, Providers, State),
-    rebar_api:info("PATH: ~p", [Path]),
-    rebar_api:info("Building escript...", []),
-    Apps = rebar_app_discover:find_unbuilt_apps([Path]),
+    %% Cwd = rebar_state:dir(State),
+    %% Path = filename:join([rebar_dir:root_dir(State), "scripts"]),
+
+
+    BaseDir = rebar_state:dir(State),
+    Dirs = filename:join(BaseDir, "scripts"),
+    RebarOpts = rebar_state:opts(State),
+    SrcDirs = rebar_dir:src_dirs(RebarOpts, ["src"]),
+    rebar_api:info("Dirs: ~p SrcDirs: ~p", [Dirs, SrcDirs]),
+    Apps = find_apps(Dirs, SrcDirs, all),
     rebar_api:info("APPS: ~p", [Apps]),
+
+
+    %% rebar_api:info("PATH: ~p", [Path]),
+    %% rebar_api:info("Building escript...", []),
+    %% Apps = rebar_app_discover:find_unbuilt_apps([Path]),
+    %% rebar_api:info("APPS: ~p", [Apps]),
     lists:foreach(fun(App) -> escriptize(State, App) end, Apps),
     {ok, State}.
 
