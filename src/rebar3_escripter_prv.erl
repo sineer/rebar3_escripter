@@ -37,7 +37,7 @@ do(State) ->
     RebarOpts = rebar_state:opts(State),
     SrcDirs = rebar_dir:src_dirs(RebarOpts, ["src"]),
     rebar_api:info("Dirs: ~p SrcDirs: ~p", [Dirs, SrcDirs]),
-    Apps = rebar_app_discover:find_apps(Dirs, SrcDirs, all),
+    Apps = rebar_app_discover:find_unbuilt_apps(Dirs, SrcDirs),
     rebar_api:info("APPS: ~p", [Apps]),
 
 
