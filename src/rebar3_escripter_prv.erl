@@ -38,7 +38,7 @@ do(State) ->
 
 escriptize(State0, App) ->
     AppName = rebar_app_info:name(App),
-    AppNameStr = binary_to_list(AppName),
+    AppNameStr = to_list(AppName),
 
     %% Get the output filename for the escript -- this may include dirs
     Filename = filename:join([rebar_dir:base_dir(State0), "bin",
@@ -114,7 +114,7 @@ get_apps_beams(Apps, AllApps) ->
 get_apps_beams([], _, Acc) ->
     Acc;
 get_apps_beams([App | Rest], AllApps, Acc) ->
-    case rebar_app_utils:find(rebar_utils:to_binary(App), AllApps) of
+    case rebar_app_utils:find(to_binary(App), AllApps) of
         {ok, App1} ->
             OutDir = filename:absname(rebar_app_info:ebin_dir(App1)),
             Beams = get_app_beams(App, OutDir),
@@ -229,3 +229,6 @@ write_windows_script(Target) ->
 
 to_binary(A) when is_atom(A) -> atom_to_binary(A, unicode);
 to_binary(Str) -> unicode:characters_to_binary(Str).
+
+to_list(A) when is_atom(A) -> atom_to_list(A);
+to_list(Str) -> unicode:characters_to_list(Str).
