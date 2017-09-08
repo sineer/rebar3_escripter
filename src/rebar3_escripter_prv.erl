@@ -186,7 +186,7 @@ get_nonempty(Files) ->
     [{FName,FBin} || {FName,FBin} <- Files, FBin =/= <<>>].
 
 find_deps(AppNames, AllApps) ->
-    BinAppNames = [atom_to_binary(Name) || Name <- AppNames],
+    BinAppNames = [to_binary(Name) || Name <- AppNames],
     [ec_cnv:to_atom(Name) ||
      Name <- find_deps_of_deps(BinAppNames, AllApps, BinAppNames)].
 
@@ -196,7 +196,7 @@ find_deps_of_deps([Name|Names], Apps, Acc) ->
     rebar_api:debug("processing ~p", [Name]),
     {ok, App} = rebar_app_utils:find(Name, Apps),
     DepNames = proplists:get_value(applications, rebar_app_info:app_details(App), []),
-    BinDepNames = [list_to_binary(Dep) || Dep <- DepNames,
+    BinDepNames = [to_binary(Dep) || Dep <- DepNames,
                    %% ignore system libs; shouldn't include them.
                    DepDir <- [code:lib_dir(Dep)],
                    DepDir =:= {error, bad_name} orelse % those are all local
@@ -226,3 +226,6 @@ write_windows_script(Target) ->
         "set rebarscript=%~f0\r\n"
         "escript.exe \"%rebarscript:.cmd=%\" %*\r\n",
     ok = file:write_file(CmdPath, CmdScript).
+
+to_binary(A) when is_atom(A) -> atom_to_binary(A, unicode);
+to_binary(Str) -> unicode:characters_to_binary(Str).
