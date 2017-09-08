@@ -33,7 +33,7 @@ do(State) ->
     %% Cwd = rebar_state:dir(State),
     %% Path = filename:join([rebar_dir:root_dir(State), "scripts"]),
 
-    ScriptDir = filename:join(BaseDir, "scripts"),
+    ScriptDir = filename:join(BaseDir, "apps"),
     Scripts = filelib:wildcard("*", ScriptDir),
     Dirs = [filename:join(ScriptDir, Script) || Script <- Scripts],
     RebarOpts = rebar_state:opts(State),
