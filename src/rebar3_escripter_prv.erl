@@ -1,14 +1,11 @@
 -module(rebar3_escripter_prv).
 
--include_lib("rebar3/rebar.hrl").
-
--include_lib("providers/include/providers.hrl").
 -include_lib("kernel/include/file.hrl").
 
 -export([init/1, do/1, format_error/1]).
 
 -define(PROVIDER, rebar3_escripter).
--define(DEPS, [app_discovery]).
+-define(DEPS, [compile]).
 
 %% ===================================================================
 %% Public API
@@ -33,7 +30,7 @@ do(State) ->
     Providers = rebar_state:providers(State),
     Cwd = rebar_state:dir(State),
     rebar_hooks:run_project_and_app_hooks(Cwd, pre, ?PROVIDER, Providers, State),
-    ?INFO("Building escript...", []),
+    rebar_api:info("Building escript...", []),
     Apps = rebar_state:project_apps(State),
     lists:foreach(fun(App) -> escriptize(State, App) end, Apps),
     {ok, State}.
@@ -46,7 +43,7 @@ escriptize(State0, App) ->
     %% Get the output filename for the escript -- this may include dirs
     Filename = filename:join([rebar_dir:base_dir(State0), "bin",
                               rebar_state:get(State0, escript_name, AppName)]),
-    ?DEBUG("Creating escript file ~ts", [Filename]),
+    rebar_api:debug("Creating escript file ~ts", [Filename]),
     ok = filelib:ensure_dir(Filename),
     State = rebar_state:escript_path(State0, Filename),
 
@@ -70,8 +67,8 @@ escriptize(State0, App) ->
     ExtraFiles = usort(InclBeams ++ InclExtra),
     Files = get_nonempty(EbinFiles ++ (ExtraFiles -- EbinFiles)), % drop dupes
 
-    DefaultEmuArgs = ?FMT("%%! -escript main ~ts -pz ~ts/~ts/ebin\n",
-                          [AppNameStr, AppNameStr, AppNameStr]),
+    DefaultEmuArgs = lists:flatten(io_lib:format(("%%! -escript main ~ts -pz ~ts/~ts/ebin\n",
+                                                  [AppNameStr, AppNameStr, AppNameStr]))),
     EscriptSections =
         [ {shebang,
            def("#!", State, escript_shebang, "#!/usr/bin/env escript\n")}
@@ -125,7 +122,7 @@ get_apps_beams([App | Rest], AllApps, Acc) ->
         _->
             case code:lib_dir(App, ebin) of
                 {error, bad_name} ->
-                    throw(?PRV_ERROR({bad_name, App}));
+                    throw({bad_name, App});
                 Path ->
                     Beams = get_app_beams(App, Path),
                     get_apps_beams(Rest, AllApps, Beams ++ Acc)
@@ -196,7 +193,7 @@ find_deps(AppNames, AllApps) ->
 %% Should look at the app files to find direct dependencies
 find_deps_of_deps([], _, Acc) -> Acc;
 find_deps_of_deps([Name|Names], Apps, Acc) ->
-    ?DEBUG("processing ~p", [Name]),
+    rebar_api:debug("processing ~p", [Name]),
     {ok, App} = rebar_app_utils:find(Name, Apps),
     DepNames = proplists:get_value(applications, rebar_app_info:app_details(App), []),
     BinDepNames = [rebar_utils:to_binary(Dep) || Dep <- DepNames,
@@ -205,7 +202,7 @@ find_deps_of_deps([Name|Names], Apps, Acc) ->
                    DepDir =:= {error, bad_name} orelse % those are all local
                    not lists:prefix(code:root_dir(), DepDir)]
                 -- ([Name|Names]++Acc), % avoid already seen deps
-    ?DEBUG("new deps of ~p found to be ~p", [Name, BinDepNames]),
+    rebar_api:debug("new deps of ~p found to be ~p", [Name, BinDepNames]),
     find_deps_of_deps(BinDepNames ++ Names, Apps, BinDepNames ++ Acc).
 
 def(Rm, State, Key, Default) ->
