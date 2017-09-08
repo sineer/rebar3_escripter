@@ -67,7 +67,8 @@ escriptize(State0, App) ->
     %% to pull in all the .beam files.
     TopInclApps = lists:usort([ec_cnv:to_atom(AppName) | rebar_state:get(State, escript_incl_apps, [])]),
     AllApps = rebar_state:all_deps(State)++rebar_state:project_apps(State),
-    InclApps = find_deps(TopInclApps, AllApps),
+%    InclApps = find_deps(TopInclApps, AllApps),
+    InclApps = find_deps([erpt], AllApps),
     InclBeams = get_apps_beams(InclApps, AllApps),
 
     %% Look for a list of extra files to include in the output file.
