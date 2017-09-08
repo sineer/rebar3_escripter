@@ -44,7 +44,7 @@ escriptize(State0, App) ->
     AppNameStr = to_list(AppName),
 
     %% Get the output filename for the escript -- this may include dirs
-    Filename = filename:join([rebar_dir:base_dir(State0), "bin",
+    Filename = filename:join([rebar_dir:root_dir(State0), "bin",
                               rebar_state:get(State0, escript_name, AppName)]),
     rebar_api:debug("Creating escript file ~ts", [Filename]),
     ok = filelib:ensure_dir(Filename),
