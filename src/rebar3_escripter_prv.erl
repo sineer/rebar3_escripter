@@ -78,7 +78,7 @@ escriptize(State0, App) ->
     case escript:create(Filename, EscriptSections) of
         ok -> ok;
         {error, EscriptError} ->
-            throw(?PRV_ERROR({escript_creation_failed, AppName, EscriptError}))
+            throw({escript_creation_failed, AppName, EscriptError})
     end,
 
     %% Finally, update executable perms for our script on *nix or write out
