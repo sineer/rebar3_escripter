@@ -186,7 +186,7 @@ get_nonempty(Files) ->
     [{FName,FBin} || {FName,FBin} <- Files, FBin =/= <<>>].
 
 find_deps(AppNames, AllApps) ->
-    BinAppNames = [rebar_utils:to_binary(Name) || Name <- AppNames],
+    BinAppNames = [list_to_binary(Name) || Name <- AppNames],
     [ec_cnv:to_atom(Name) ||
      Name <- find_deps_of_deps(BinAppNames, AllApps, BinAppNames)].
 
@@ -196,7 +196,7 @@ find_deps_of_deps([Name|Names], Apps, Acc) ->
     rebar_api:debug("processing ~p", [Name]),
     {ok, App} = rebar_app_utils:find(Name, Apps),
     DepNames = proplists:get_value(applications, rebar_app_info:app_details(App), []),
-    BinDepNames = [rebar_utils:to_binary(Dep) || Dep <- DepNames,
+    BinDepNames = [list_to_binary(Dep) || Dep <- DepNames,
                    %% ignore system libs; shouldn't include them.
                    DepDir <- [code:lib_dir(Dep)],
                    DepDir =:= {error, bad_name} orelse % those are all local
