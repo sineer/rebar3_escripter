@@ -186,7 +186,7 @@ get_nonempty(Files) ->
     [{FName,FBin} || {FName,FBin} <- Files, FBin =/= <<>>].
 
 find_deps(AppNames, AllApps) ->
-    BinAppNames = [list_to_binary(Name) || Name <- AppNames],
+    BinAppNames = [atom_to_binary(Name) || Name <- AppNames],
     [ec_cnv:to_atom(Name) ||
      Name <- find_deps_of_deps(BinAppNames, AllApps, BinAppNames)].
 
