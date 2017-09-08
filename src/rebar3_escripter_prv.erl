@@ -2,6 +2,9 @@
 
 -include("rebar.hrl").
 
+-include_lib("providers/include/providers.hrl").
+-include_lib("kernel/include/file.hrl").
+
 -export([init/1, do/1, format_error/1]).
 
 -define(PROVIDER, rebar3_escripter).
