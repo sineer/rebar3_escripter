@@ -38,9 +38,9 @@ do(State) ->
     Dirs = [filename:join(ScriptDir, Script) || Script <- Scripts],
     RebarOpts = rebar_state:opts(State),
     SrcDirs = rebar_dir:src_dirs(RebarOpts, ["src"]),
-    rebar_api:info("Dirs: ~p SrcDirs: ~p", [Dirs, SrcDirs]),
+%%    rebar_api:info("Dirs: ~p SrcDirs: ~p", [Dirs, SrcDirs]),
     Apps = rebar_app_discover:find_apps(Dirs, SrcDirs, all),
-    rebar_api:info("APPS: ~p", [Apps]),
+%%    rebar_api:info("APPS: ~p", [Apps]),
 
 
     %% rebar_api:info("PATH: ~p", [Path]),
@@ -68,7 +68,7 @@ escriptize(State0, App) ->
     TopInclApps = lists:usort([ec_cnv:to_atom(AppName) | rebar_state:get(State, escript_incl_apps, [])]),
     AllApps = rebar_state:all_deps(State)++rebar_state:project_apps(State),
 
-    rebar_api:info("TopInclApps: ~p AllApps: ~p", [TopInclApps, AllApps]),
+%%    rebar_api:info("TopInclApps: ~p", [TopInclApps]),
     InclApps = find_deps(TopInclApps, AllApps),
     InclBeams = get_apps_beams(InclApps, AllApps),
 
