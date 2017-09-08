@@ -28,12 +28,11 @@ init(State) ->
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
     Providers = rebar_state:providers(State),
-    rebar_hooks:run_project_and_app_hooks(Cwd, pre, ?PROVIDER, Providers, State),
+    BaseDir = rebar_state:dir(State),
+    rebar_hooks:run_project_and_app_hooks(BaseDir, pre, ?PROVIDER, Providers, State),
     %% Cwd = rebar_state:dir(State),
     %% Path = filename:join([rebar_dir:root_dir(State), "scripts"]),
 
-
-    BaseDir = rebar_state:dir(State),
     Dirs = filename:join(BaseDir, "scripts"),
     RebarOpts = rebar_state:opts(State),
     SrcDirs = rebar_dir:src_dirs(RebarOpts, ["src"]),
