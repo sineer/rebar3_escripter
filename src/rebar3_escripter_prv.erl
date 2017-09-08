@@ -25,7 +25,7 @@ init(State) ->
 
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
-    rebar_api:info("Running Escripter plugin..."),
+    rebar_api:info("Running Escripter plugin...", []),
     lists:foreach(fun(App) -> escriptize_app(State, App) end, rebar_state:project_apps(State)),
     {ok, State}.
 
