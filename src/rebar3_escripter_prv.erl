@@ -33,7 +33,7 @@ do(State) ->
     %% Cwd = rebar_state:dir(State),
     %% Path = filename:join([rebar_dir:root_dir(State), "scripts"]),
 
-    ScriptDir = filename:join(BaseDir, "apps"),
+    ScriptDir = filename:join(BaseDir, "scripts"),
     Scripts = filelib:wildcard("*", ScriptDir),
     Dirs = [filename:join(ScriptDir, Script) || Script <- Scripts],
     RebarOpts = rebar_state:opts(State),
@@ -54,7 +54,7 @@ escriptize(State0, App) ->
     %% Get the output filename for the escript -- this may include dirs
     Filename = filename:join([rebar_dir:base_dir(State0), "bin",
                               rebar_state:get(State0, escript_name, AppName)]),
-    rebar_api:debug("Creating escript file ~ts", [Filename]),
+    rebar_api:info("Creating escript file ~ts", [Filename]),
     ok = filelib:ensure_dir(Filename),
     State = rebar_state:escript_path(State0, Filename),
 
