@@ -79,8 +79,8 @@ escriptize(State0, App) ->
     ExtraFiles = usort(InclBeams ++ InclExtra),
     Files = get_nonempty(EbinFiles ++ (ExtraFiles -- EbinFiles)), % drop dupes
 
-    DefaultEmuArgs = lists:flatten(io_lib:format("%%! -sname ~ts -escript main ~ts -pz ~ts/~ts/ebin\n",
-                                                 [AppNameStr, AppNameStr, AppNameStr, AppNameStr])),
+    DefaultEmuArgs = lists:flatten(io_lib:format("%%! -escript main ~ts -pz ~ts/~ts/ebin\n",
+                                                 [AppNameStr, AppNameStr, AppNameStr])),
     EscriptSections =
         [ {shebang,
            def("#!", State, escript_shebang, "#!/usr/bin/env escript\n")}
